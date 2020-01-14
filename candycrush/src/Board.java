@@ -550,5 +550,14 @@ public class Board {
             }
         }
     }
+//Liam's Code that was needed!
+    public void swap(int[][] arr, int r1, int c1, int r2, int c2){
+        if((r1-1==r2&&c1==c2)||(r1+1==r2&&c1==c2)||(r1==r2&&c1-1==c2)||(r1==r2&&c1+1==c2)){
+            int temp = arr[r1][c1];
+            arr[r1][c1] = arr[r2][c2];
+            arr[r2][c2] = temp;
+        }
+    }
+
 }
 
