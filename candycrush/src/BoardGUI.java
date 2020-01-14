@@ -122,19 +122,6 @@ public class BoardGUI extends JPanel implements KeyListener, ActionListener, Mou
 			case 40:
 				data.down();
 				break;
-            case 69:
-            	int keepme = data.getBoard()[0][0];
-                data.MarkAll(0, 0);
-
-                if (data.count()>= 3) {
-					data.remove(0);
-					System.out.println(data.count());
-				}
-                else {
-                	System.out.println(data.count());
-                	System.out.println("Value for 0,0 should be "+keepme);
-				}
-                data.markedReset();
 		}
 		
 		
