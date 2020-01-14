@@ -5,31 +5,44 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
+import java.awt.event.*;
+import java.awt.event.MouseAdapter;
 
-public class BoardGUI extends JPanel implements KeyListener, ActionListener{
+
+public class BoardGUI extends JPanel implements KeyListener, ActionListener, MouseListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Tile[][] b;
 	private Board data;
 	private Color[] colors;
 	Timer t;
+	private int x1;
+	private int x2;
+	private int y1;
+	private int y2;
 	
 	public BoardGUI() {
-		b = new Tile[10][10];
+		b = new Tile[4][4];
 		colors = new Color[11];
-		setup(new int[][]{});
-		//t.start();
+		t = new Timer(1000,this);
+		setup(new int[][]{});	
+		t.start();
 	}	
 	
 	public BoardGUI(int[][] d) {
-		b = new Tile[10][10];
+		b = new Tile[4][4];
 		colors = new Color[11];
 		t = new Timer(1000,this);
 		setup(d);
-		//t.start();
+		t.start();
 	}		
 	
 	
@@ -42,9 +55,11 @@ public class BoardGUI extends JPanel implements KeyListener, ActionListener{
 	
 	public void setup(int[][] d) {
 		JFrame frame = new JFrame("2048");
-		frame.setSize(800, 900);
+		frame.setSize(400, 450);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addKeyListener(this);
+		frame.addMouseListener(this);
+		addMouseListener(this);
 		
 		colors[0] = new Color(0xc7b9ab);
 		colors[1] = new Color(0xeaded5);
@@ -59,7 +74,7 @@ public class BoardGUI extends JPanel implements KeyListener, ActionListener{
 		colors[10]= new Color(0xf3c92f);
 
 		Font bigFont = new Font("Serif", Font.BOLD, 55);
-		GridLayout g = new GridLayout(10,10);
+		GridLayout g = new GridLayout(4,4);
 		frame.setLayout(g);
 		
 		for(int i =0; i < b.length;i++) {
@@ -80,8 +95,8 @@ public class BoardGUI extends JPanel implements KeyListener, ActionListener{
 	}
 	
 	public void update() {
-		for(int r = 0; r < 10;r++) {
-			for(int c =0; c < 10; c++) {
+		for(int r = 0; r < 4;r++) {
+			for(int c =0; c < 4; c++) {
 				b[r][c].setValue(data.getBoard()[r][c]);
 				b[r][c].setBackground(colors[b[r][c].cindex]);
 			}
@@ -93,18 +108,18 @@ public class BoardGUI extends JPanel implements KeyListener, ActionListener{
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		/* call the helper methods for the Board object data*/
-		//data.slideLeft(data.getBoard()[0]); 	//pass at row 0 of board
+		
 		switch(arg0.getKeyCode()) {
-			case 39:	//right arrow key
+			case 39:
 				data.right();
 				break;
-			case 37: 	//left arrow key
+			case 37: 
 				data.left();
 				break;
-			case 38:	//up arrow key
+			case 38:
 				data.up();
 				break;
-			case 40:	//down arrow key
+			case 40:
 				data.down();
 				break;
             case 69:
@@ -122,7 +137,7 @@ public class BoardGUI extends JPanel implements KeyListener, ActionListener{
                 data.markedReset();
 		}
 		
-		data.populateOne();
+		
 		update();
 		/** reset the game if all tiles are populated **/
 		if(data.gameOver()) {
@@ -146,13 +161,41 @@ public class BoardGUI extends JPanel implements KeyListener, ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
-		//bot algorithm - decide the next move
-		//data.left();
+		//bot algorithm here
 		//data.populateOne();
-		//update();
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+	     x1=e.getX();
+	     y1=e.getY();
+	    System.out.println(x1+","+y1);//these co-ords are relative to the component
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	     x2=e.getX();
+	     y2=e.getY();
+	    System.out.println(x2+","+y2);//these co-ords are relative to the component
 	}
 
-	
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	
 	
 }
