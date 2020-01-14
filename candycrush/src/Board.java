@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Random;
 
 public class Board {
@@ -380,26 +381,39 @@ public class Board {
         //2)combine
         //3)slide again
         slideLeft();    //simplified version of two methods
-        combineLeft(); //checks if you can combine any
-        slideLeft(); //once it combines them, it slides them over like in the real game.
+//        combineLeft(); //checks if you can combine any
+//        slideLeft(); //once it combines them, it slides them over like in the real game.
+//        markLeft(board.length - 1, board[0].length-1);
+//        remove();
     }
 
     public void right() {
         slideRight();
-        combineRight(); //checks if you can combine any
-        slideRight(); //once it combines them, it slides them over like in the real game.
+//        combineRight(); //checks if you can combine any
+//        slideRight(); //once it combines them, it slides them over like in the real game.
+//        markRight(board.length - 1, board[0].length-1);
+//        remove();
+
     }
 
     public void up() {
         slideUp();
-        combineUp(); //checks if you can combine any
-        slideUp(); //once it combines them, it slides them over like in the real game.
+//        combineUp(); //checks if you can combine any
+//        slideUp(); //once it combines them, it slides them over like in the real game.
+//        MarkAll(board.length - 1,board[0].length - 1);
+        if (count() > 3){
+            remove(0);
+        }
+
+        markedReset();
+
     }
 
     public void down() {
         slideDown();
-        combineDown(); //checks if you can combine any
+//        combineDown(); //checks if you can combine any
         slideDown(); //once it combines them, it slides them over like in the real game.
+//        markDown()/;
     }
 
     public boolean gameOver() {
@@ -424,10 +438,10 @@ public class Board {
         int reference = board[row][col];
         boolean go = true;
         int c = col;
-        while (go) {
-            if ((board[row][c] == reference) && (marked[row][c] != 1)) {
+        while (go && row >=0 && c >=0) {
+            if ((board[row][c] == reference) && (marked[row][c] != 1) ) {
                 marked[row][c] = 1;
-                if (c >= 0) {
+                if (c > 0) {
                     c--;
                     succeed = 0;
                 }
@@ -443,7 +457,7 @@ public class Board {
         int reference = board[row][col];
         boolean go = true;
         int c = col;
-        while (go) {
+        while (go && c < board.length ) {
             if ((board[row][c] == reference) && (marked[row][c] != 1)) {
                 marked[row][c] = 1;
                 if (c < board[0].length) {
@@ -463,7 +477,22 @@ public class Board {
         int reference = board[row][col];
         boolean go = true;
         int r = row;
-        while (go) {
+        while (go && r >= 0) {
+            if ((board[r][col] == reference) && (marked[r][col] != 1)) {
+                marked[r][col] = 1;
+                if (r < board.length) {
+                    r--;
+                    succeed = 0;
+                }
+                go = true;
+            } else go = false;
+        }
+    }
+    public void markDown(int row, int col) {
+        int reference = board[row][col];
+        boolean go = true;
+        int r = row;
+        while (go && r < 10) {
             if ((board[r][col] == reference) && (marked[r][col] != 1)) {
                 marked[r][col] = 1;
                 if (r < board.length) {
@@ -474,29 +503,49 @@ public class Board {
             } else go = false;
         }
     }
-
-    public void markDown(int row, int col) {
-        int reference = board[row][col];
-        boolean go = true;
-        int r = row;
-        while (go) {
-            if ((board[r][col] == reference) && (marked[r][col] != 1)) {
-                marked[r][col] = 1;
-                if (r >= 0) {
-                    succeed--;
-                    r--;
-                }
-                go = true;
-            } else go = false;
-        }
-    }
-
-    public void remove() {
+    public  int  count(){
+        int counter = 0;
         for (int i = 0; i <marked.length ; i++) {
-            for (int j = 0; j <marked[0].length ; j++) {
-                if(marked[i][j] == 1){
+            for (int j = 0; j < marked[0].length; j++) {
+                if(marked[i][j] == 1) ++counter;
+            }
+        }
+        return  counter;
+        }
+    public void remove(int cntr) {
+        int counter = cntr;
+        int[][] b = board;
+              System.out.println(Arrays.deepToString(marked));
+            System.out.println(Arrays.deepToString(board));
+        for (int i = 0; i <marked.length ; i++) {
+            for (int j = 0; j < marked[0].length; j++) {
+                if (marked[i][j] == 1) {
                     marked[i][j] = 0;
+                    board[i][j] = 0;
                 }
+
+            }
+
+        }
+//        else {board = b;}
+    }
+    public void MarkAll(int row, int col){
+        succeed = 0;
+        markUp(row, col);
+        succeed = 0;
+        marked[row][col] = 0;
+        markLeft(row, col);
+        succeed = 0;
+        marked[row][col] = 0;
+        markRight(row,col);
+        marked[row][col] = 0;
+        succeed = 0;
+        markDown(row, col);
+    }
+    public void markedReset(){
+        for (int i = 0; i < marked.length; i++) {
+            for (int j = 0; j <marked[0].length ; j++) {
+                marked[i][j] = 0;
 
             }
         }
