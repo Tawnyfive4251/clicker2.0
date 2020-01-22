@@ -1,48 +1,38 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
-import java.awt.event.*;
-import java.awt.event.MouseAdapter;
 
-
-public class BoardGUI extends JPanel implements KeyListener, ActionListener, MouseListener{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class BoardGUI extends JPanel implements KeyListener, ActionListener{
 	private Tile[][] b;
 	private Board data;
 	private Color[] colors;
 	Timer t;
-	private int x1;
-	private int x2;
-	private int y1;
-	private int y2;
 	
 	public BoardGUI() {
-		b = new Tile[4][4];
+		b = new Tile[10][10];
 		colors = new Color[11];
-		t = new Timer(1000,this);
-		setup(new int[][]{});	
-		t.start();
+		setup(new int[][]{});
+		//t.start();
 	}	
 	
 	public BoardGUI(int[][] d) {
-		b = new Tile[4][4];
+		b = new Tile[10][10];
 		colors = new Color[11];
 		t = new Timer(1000,this);
 		setup(d);
-		t.start();
+		//t.start();
 	}		
 	
 	
@@ -55,13 +45,11 @@ public class BoardGUI extends JPanel implements KeyListener, ActionListener, Mou
 	
 	public void setup(int[][] d) {
 		JFrame frame = new JFrame("2048");
-		frame.setSize(400, 450);
+		frame.setSize(800, 900);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addKeyListener(this);
-		frame.addMouseListener(this);
-		addMouseListener(this);
 		
-		colors[0] = new Color(0xc7b9ab);
+		/*colors[0] = new Color(0xc7b9ab);
 		colors[1] = new Color(0xeaded5);
 		colors[2] = new Color(0xe9dbc0);
 		colors[3] = new Color(0xefa76b);
@@ -71,10 +59,22 @@ public class BoardGUI extends JPanel implements KeyListener, ActionListener, Mou
 		colors[7]= new Color(0xedcf72);
 		colors[8]= new Color(0xedcc61);
 		colors[9]= new Color(0xedcc61);
+		colors[10]= new Color(0xf3c92f);*/
+		
+		colors[0] = new Color(0xc7b9ab);
+		colors[1] = new Color(0xff0005);
+		colors[2] = new Color(0x11aeee);
+		colors[3] = new Color(0xe5da1a);
+		colors[4] = new Color(0x27d83d);
+		colors[5] = new Color(0x836e4b);
+		colors[6] = new Color(0xf65e3b);
+		colors[7]= new Color(0xedcf72);
+		colors[8]= new Color(0xedcc61);
+		colors[9]= new Color(0xedcc61);
 		colors[10]= new Color(0xf3c92f);
 
 		Font bigFont = new Font("Serif", Font.BOLD, 55);
-		GridLayout g = new GridLayout(4,4);
+		GridLayout g = new GridLayout(10,10);
 		frame.setLayout(g);
 		
 		for(int i =0; i < b.length;i++) {
@@ -95,36 +95,35 @@ public class BoardGUI extends JPanel implements KeyListener, ActionListener, Mou
 	}
 	
 	public void update() {
-		for(int r = 0; r < 4;r++) {
-			for(int c =0; c < 4; c++) {
+		for(int r = 0; r < 10;r++) {
+			for(int c =0; c < 10; c++) {
 				b[r][c].setValue(data.getBoard()[r][c]);
 				b[r][c].setBackground(colors[b[r][c].cindex]);
 			}
 		}
 	}
 	
-	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		/* call the helper methods for the Board object data*/
-		
+		//data.slideLeft(data.getBoard()[0]); 	//pass at row 0 of board
 		switch(arg0.getKeyCode()) {
-			case 39:
+			case 39:	//right arrow key
 				data.right();
 				break;
-			case 37: 
+			case 37: 	//left arrow key
 				data.left();
 				break;
-			case 38:
+			case 38:	//up arrow key
 				data.up();
 				break;
-			case 40:
+			case 40:	//down arrow key
 				data.down();
 				break;
 		}
 		
-		
+		data.populateOne();
 		update();
 		/** reset the game if all tiles are populated **/
 		if(data.gameOver()) {
@@ -148,41 +147,13 @@ public class BoardGUI extends JPanel implements KeyListener, ActionListener, Mou
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
-		//bot algorithm here
+		//bot algorithm - decide the next move
+		//data.left();
 		//data.populateOne();
-	}
-	@Override
-	public void mousePressed(MouseEvent e) {
-	     x1=e.getX();
-	     y1=e.getY();
-	    System.out.println(x1+","+y1);//these co-ords are relative to the component
-	}
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	     x2=e.getX();
-	     y2=e.getY();
-	    System.out.println(x2+","+y2);//these co-ords are relative to the component
+		//update();
 	}
 
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
+	
 	
 	
 }
