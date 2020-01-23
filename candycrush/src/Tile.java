@@ -11,10 +11,10 @@ public class Tile extends JLabel {
 	 int val=0;
 	int cindex = 0;
 	public Tile() {
-		cb = new Color(0xb1a395);
+		cb = new Color(0x000000);	//b1a395 - original color
 		setOpaque(true);
 		tots++;		
-		MatteBorder matte = new MatteBorder(5,5,5,5,cb);
+		MatteBorder matte = new MatteBorder(4,4,4,4,cb);
 		this.setBorder(matte);
 		if(val>0) setText(Integer.toString(val));		
 	}
@@ -26,12 +26,12 @@ public class Tile extends JLabel {
 	}
 	public Tile(int n) {
 		val = n;
-		cb = new Color(0xb1a395);
+		cb = new Color(0x000000);
 		setOpaque(true);
 		tots++;
 		
 		
-		MatteBorder matte = new MatteBorder(5,5,5,5,cb);
+		MatteBorder matte = new MatteBorder(4,4,4,4,cb);
 		this.setBorder(matte);
 		setText(Integer.toString(val));
 	}
@@ -55,12 +55,11 @@ public class Tile extends JLabel {
 			}
 			
 			
-			
 			int val2 = Integer.valueOf(Integer.toString(val));
 			val2 = (int)( (Math.log(val)/Math.log(2)));
 			if(val>0) {
 				cindex = val2;
-				super.setText(Integer.toString(val));
+				//super.setText(Integer.toString(val));
 			}else {
 				cindex = 0;
 				super.setText("");
