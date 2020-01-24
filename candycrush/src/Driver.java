@@ -3,7 +3,7 @@ import java.util.Arrays;
 
 public class Driver {
 	public static void main(String[] arg) {
-	
+	int rand  = (int)(Math.random()*(3)+1);
 		int[][] data3 = { {32,32,32,0,0,0,0,32,32,32},  
 						 {32,32,0,0,0,0,0,0,32,32}, 
 						 {32,0,0,0,0,0,0,0,0,32}, 
@@ -37,7 +37,13 @@ public class Driver {
 				  		  {0,0,0,0,0,0,0,0,0,32},
 				  		  {32,0,0,0,0,0,0,0,32,32}
 						};
-		BoardGUI b = new BoardGUI(data1);	//non populated board
+		if(rand == 1){
+			BoardGUI b = new BoardGUI(data1);	//non populated board
+		}else if(rand == 2){
+			BoardGUI b = new BoardGUI(data2);
+		}else{
+			BoardGUI b = new BoardGUI(data3);
+		}
 		//BoardGUI b = new BoardGUI();	//populated board
 		//Board c = new Board();
 		//int[] myCol = c.getCol(data,0);
