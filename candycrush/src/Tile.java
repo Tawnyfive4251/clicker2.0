@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Font;
-
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.border.MatteBorder;
 
@@ -16,7 +18,9 @@ public class Tile extends JLabel {
 		tots++;		
 		MatteBorder matte = new MatteBorder(5,5,5,5,cb);
 		this.setBorder(matte);
-		if(val>0) setText(Integer.toString(val));		
+		if(val>=0) setText(Integer.toString(val));
+//		NEW CODE
+//		if (val>0) setIcon("rocc");
 	}
 	
 	
@@ -60,13 +64,32 @@ public class Tile extends JLabel {
 			val2 = (int)( (Math.log(val)/Math.log(2)));
 			if(val>0) {
 				cindex = val2;
-				super.setText(Integer.toString(val));
+//				super.setText(Integer.toString(val));
 			}else {
 				cindex = 0;
 				super.setText("");
 			}
 		}catch(Exception e) {
 			
+		}
+	}
+	public int getVal(){
+		return val;
+	}
+	public void setImage(){
+		String urlimage = String.format("images/%d",val);
+		ImageIcon icon = createImageIcon(urlimage, "bruh");
+		setIcon( icon);
+	}
+	/** Returns an ImageIcon, or null if the path was invalid. */
+	protected ImageIcon createImageIcon(String path,
+										String description) {
+		java.net.URL imgURL = getClass().getResource(path);
+		if (imgURL != null) {
+			return new ImageIcon(imgURL, description);
+		} else {
+			System.err.println("Couldn't find file: " + path);
+			return null;
 		}
 	}
 }

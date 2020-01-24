@@ -6,9 +6,9 @@ public class Board {
     private int[][] board; // holds state of game
     private Random rnd = new Random(0); // setup random # generator
     private int openTiles = 100;    //var for checking if game is over
-    private boolean game_over = false;    //if true it resets the game
+    private final boolean game_over = false;    //if true it resets the game
     private int num = 0;    //debounce variable
-    private int[][] marked = new int[10][10];
+    public int[][] marked = new int[10][10];
     private int succeed;
 
     /* default constructor for board */
@@ -19,9 +19,9 @@ public class Board {
         // instantiate the board
         board = new int[10][10];
 
-        game_over = false;
-        populateOne();    //populates the blank board twice automatically
-        populateOne();
+//        game_over = false;
+        populateAll();    //populates the blank board twice automatically
+        populateAll();
     }
 
     /*
@@ -78,11 +78,6 @@ public class Board {
      */
 
     public void populateOne() {    //randomly populates a square
-        if (openTiles <= 0) {    //checks if the game can no longer be continued
-            openTiles = 100;
-            game_over = true;
-            return;
-        }
         int num;
         int x;    //Variables for populate
         int y;
@@ -94,8 +89,14 @@ public class Board {
         } else {
             num = 2;
         }
+        boolean full = true;
+        for (int i = 0; i <board.length ; i++) {
+            for (int j = 0; j <board[0].length ; j++) {
+                if (board[i][j] ==0) full = false;
+            }
 
-        while (!found) {    //if it doesn't find an open tile it will find another random tile
+        }
+        while (!found && !full) {    //if it doesn't find an open tile it will find another random tile
             x = (int) (rnd.nextInt(10));
             y = (int) (rnd.nextInt(10));
             if (board[x][y] == 0) {
@@ -227,10 +228,10 @@ public class Board {
 
     public void slideDown(int[] row) {
         for (int i = row.length - 1; i >= 0; i--) {
-            if (row[i] == 0) {
+            if (row[i] == 0 || row[i] == 32) {
                 //open! find the next non-zero element
                 for (int j = i - 1; j >= 0; j--) {
-                    if (row[j] != 0) {
+                    if (row[j] != 0 || row[j] !=32) {
                         //swap el j and i;
                         int temp = row[i];
                         row[i] = row[j];
@@ -380,45 +381,54 @@ public class Board {
         //1)numbers slide to the left
         //2)combine
         //3)slide again
+//        populateOne();
         slideLeft();    //simplified version of two methods
-//        combineLeft(); //checks if you can combine any
-//        slideLeft(); //once it combines them, it slides them over like in the real game.
+        combineLeft(); //checks if you can combine any
+        slideLeft(); //once it combines them, it slides them over like in the real game.
+        populateAll();
 //        markLeft(board.length - 1, board[0].length-1);
 //        remove();
     }
 
     public void right() {
+        populateOne();
         slideRight();
-//        combineRight(); //checks if you can combine any
-//        slideRight(); //once it combines them, it slides them over like in the real game.
+        combineRight(); //checks if you can combine any
+        slideRight(); //once it combines them, it slides them over like in the real game.
+        populateAll();
 //        markRight(board.length - 1, board[0].length-1);
 //        remove();
 
     }
 
     public void up() {
+        populateOne();
         slideUp();
-//        combineUp(); //checks if you can combine any
-//        slideUp(); //once it combines them, it slides them over like in the real game.
+        combineUp(); //checks if you can combine any
+        slideUp();
+        populateAll();
+        //once it combines them, it slides them over like in the real game.
 //        MarkAll(board.length - 1,board[0].length - 1);
-        if (count() > 3){
-            remove(0);
-        }
+//        if (count() > 3){
+//            remove(0);
+//        }
 
-        markedReset();
+//        markedReset();
 
     }
 
     public void down() {
+        populateOne();
         slideDown();
-//        combineDown(); //checks if you can combine any
-        slideDown(); //once it combines them, it slides them over like in the real game.
+        combineDown(); //checks if you can combine any
+        slideDown();
+        populateAll();//once it combines them, it slides them over like in the real game.
 //        markDown()/;
     }
 
-    public boolean gameOver() {
-        return game_over;    //boolean starts as false, and becomes true after all squares are full
-    }                        //and you can no longer combine numbers
+//    public boolean gameOver() {
+//        return game_over;    //boolean starts as false, and becomes true after all squares are full
+//    }                        //and you can no longer combine numbers
 
     public int[][] getBoard() {
         return board;    //returns the 2d array board
@@ -436,11 +446,12 @@ public class Board {
 
     public void markLeft(int row, int col) {
         int reference = board[row][col];
+        if (reference == 32 ) return;
         boolean go = true;
         int c = col;
         while (go && row >=0 && c >=0) {
             if ((board[row][c] == reference) && (marked[row][c] != 1) ) {
-                marked[row][c] = 1;
+                if(c!=col) marked[row][c] = 1;
                 if (c > 0) {
                     c--;
                     succeed = 0;
@@ -455,11 +466,13 @@ public class Board {
 
     public void markRight(int row, int col) {
         int reference = board[row][col];
+        if (reference == 32 ) return;
+
         boolean go = true;
         int c = col;
         while (go && c < board.length ) {
             if ((board[row][c] == reference) && (marked[row][c] != 1)) {
-                marked[row][c] = 1;
+                if(c!=col) marked[row][c] = 1;
                 if (c < board[0].length) {
                     c++;
                     succeed = 0;
@@ -475,11 +488,13 @@ public class Board {
 
     public void markUp(int row, int col) {
         int reference = board[row][col];
+        if (reference == 32 ) return;
+
         boolean go = true;
         int r = row;
         while (go && r >= 0) {
             if ((board[r][col] == reference) && (marked[r][col] != 1)) {
-                marked[r][col] = 1;
+                if(r!=row) marked[r][col] = 1;
                 if (r < board.length) {
                     r--;
                     succeed = 0;
@@ -490,11 +505,13 @@ public class Board {
     }
     public void markDown(int row, int col) {
         int reference = board[row][col];
+        if (reference == 32 ) return;
+
         boolean go = true;
         int r = row;
         while (go && r < 10) {
             if ((board[r][col] == reference) && (marked[r][col] != 1)) {
-                marked[r][col] = 1;
+                if(r!=row) marked[r][col] = 1;
                 if (r < board.length) {
                     r++;
                     succeed = 0;
@@ -512,11 +529,17 @@ public class Board {
         }
         return  counter;
         }
-    public void remove(int cntr) {
-        int counter = cntr;
-        int[][] b = board;
-              System.out.println(Arrays.deepToString(marked));
-            System.out.println(Arrays.deepToString(board));
+    public void remove() {
+        int counter = 0;
+//        int[][] b = board;
+//              System.out.println(Arrays.deepToString(marked));
+//            System.out.println(Arrays.deepToString(board));
+        for (int i = 0; i <marked.length ; i++) {
+            for (int j = 0; j < marked[0].length; j++) {
+         if (marked[i][j] == 1) counter++;
+            }
+        }
+         if (counter >=2){
         for (int i = 0; i <marked.length ; i++) {
             for (int j = 0; j < marked[0].length; j++) {
                 if (marked[i][j] == 1) {
@@ -525,7 +548,7 @@ public class Board {
                 }
 
             }
-
+        }
         }
 //        else {board = b;}
     }
@@ -551,13 +574,69 @@ public class Board {
         }
     }
 //Liam's Code that was needed!
-    public void swap(int[][] arr, int r1, int c1, int r2, int c2){
-        if((r1-1==r2&&c1==c2)||(r1+1==r2&&c1==c2)||(r1==r2&&c1-1==c2)||(r1==r2&&c1+1==c2)){
-            int temp = arr[r1][c1];
-            arr[r1][c1] = arr[r2][c2];
-            arr[r2][c2] = temp;
+    public void swap(int r1, int c1, int r2, int c2) {
+        if ((r1 - 1 == r2 && c1 == c2) || (r1 + 1 == r2 && c1 == c2) || (r1 == r2 && c1 - 1 == c2) || (r1 == r2 && c1 + 1 == c2)) {
+            int temp = board[r1][c1];
+            board[r1][c1] = board[r2][c2];
+            board[r2][c2] = temp;
         }
     }
+// Ethan's code that worked
+public int randomTileNum(){
+    int randNum = (int)(Math.random()*(4)+1);
+    if(randNum == 1){
+        return 2;
+    }else if(randNum == 2){
+        return 4;
+    }else if(randNum ==3){
+        return 8;
+    }else{
+        return 16;
+    }
+}
+
+    public void populateAll() {	//randomly populates a square
+        //randomNumGenerator(1-4)
+        int num = 0;
+        boolean firstR = true;
+        boolean firstC = true;
+
+        for(int r=0;r<board.length;r++){
+            for(int c=0;c<board[0].length;c++){
+                num = randomTileNum();
+                if(board[r][c]==0){
+                    if(firstR){
+                        board[r][c] = num;
+                    }else if(firstC){
+                        board[r][c] = num;
+                    }else if(board[r-1][c]==num){
+                        num = randomTileNum();
+                        board[r][c] = num;
+                    }else if(board[r][c-1]==num){
+                        num = randomTileNum();
+                        board[r][c] = num;
+                    }else{
+                        board[r][c] = num;
+                    }
+                }
+                firstC = false;
+            }
+            firstC = true;
+            firstR = false;
+        }
+    }
+
+
+    public void populateFree(){
+        for (int i = 0; i <board.length ; i++) {
+            for (int j = 0; j <board[0].length ; j++) {
+              if(board[i][j]==0){
+                board[i][j] = (int) (Math.random()*3 + 1);
+                board[i][j] = (int)Math.pow(2,board[i][j]);
+            }}
+        }
+    }
+
 
 }
 
