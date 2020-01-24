@@ -1,0 +1,5 @@
+    System.out.println("Welcome to Tyle");
+		System.out.println("In order to play, click and drag tiles to connect three or more of the same colored tile to earn points");
+		System.out.println("Tiles can only be swapped adjacendtly and not diagonally");
+		System.out.println("Brown colored tiles are rocks and cannop be swaped/combined");
+		System.out.println("Click an empty(non-brown) tile to begin");
